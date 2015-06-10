@@ -92,7 +92,7 @@ extension NSIndexSet {
     }
   }
   
-  func sectionIndexTitlesForTableView(tableView: UITableView) -> [AnyObject]! {
+  func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
     if let ds = self.nextDataSource {
       return ds.sectionIndexTitlesForTableView?(tableView) ?? []
     } else {
@@ -194,7 +194,7 @@ public class UITableViewDataSourceBond<T>: ArrayBond<DynamicArray<UITableViewCel
             tableView.beginUpdates()
             tableView.insertSections(NSIndexSet(array: i), withRowAnimation: UITableViewRowAnimation.Automatic)
             
-            for section in sorted(i, <) {
+            for section in i.sort(<) {
               let sectionBond = UITableViewDataSourceSectionBond<Void>(tableView: tableView, section: section, disableAnimation: disableAnimation)
               let sectionDynamic = array[section]
               sectionDynamic.bindTo(sectionBond)
@@ -217,7 +217,7 @@ public class UITableViewDataSourceBond<T>: ArrayBond<DynamicArray<UITableViewCel
           perform(animated: !disableAnimation) {
             tableView.beginUpdates()
             tableView.deleteSections(NSIndexSet(array: i), withRowAnimation: UITableViewRowAnimation.Automatic)
-            for section in sorted(i, >) {
+            for section in i.sort(>) {
               s.sectionBonds[section].unbindAll()
               s.sectionBonds.removeAtIndex(section)
               
@@ -290,21 +290,7 @@ public class UITableViewDataSourceBond<T>: ArrayBond<DynamicArray<UITableViewCel
   }
 }
 
-private var bondDynamicHandleUITableView: UInt8 = 0
-
-extension UITableView /*: Bondable */ {
-  public var designatedBond: UITableViewDataSourceBond<UITableViewCell> {
-    if let d: AnyObject = objc_getAssociatedObject(self, &bondDynamicHandleUITableView) {
-      return (d as? UITableViewDataSourceBond<UITableViewCell>)!
-    } else {
-      let bond = UITableViewDataSourceBond<UITableViewCell>(tableView: self, disableAnimation: false)
-      objc_setAssociatedObject(self, &bondDynamicHandleUITableView, bond, objc_AssociationPolicy(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
-      return bond
-    }
-  }
-}
-
-private func perform(#animated: Bool, block: () -> Void) {
+private func perform(animated animated: Bool, block: () -> Void) {
   if !animated {
     UIView.performWithoutAnimation(block)
   } else {
@@ -314,12 +300,4 @@ private func perform(#animated: Bool, block: () -> Void) {
 
 public func ->> <T>(left: DynamicArray<UITableViewCell>, right: UITableViewDataSourceBond<T>) {
   right.bind(left)
-}
-
-public func ->> (left: DynamicArray<UITableViewCell>, right: UITableView) {
-  left ->> right.designatedBond
-}
-
-public func ->> (left: DynamicArray<DynamicArray<UITableViewCell>>, right: UITableView) {
-  left ->> right.designatedBond
 }
