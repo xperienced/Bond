@@ -1,7 +1,15 @@
 language: objective-c
-xcode_project: Bond.xcodeproj
-xcode_scheme: Bond
 osx_image: xcode6.4
 
-script: xctool -project Bond.xcodeproj -scheme Bond -sdk iphonesimulator test && xctool -project Bond.xcodeproj -scheme BondOSX -sdk macosx test
+xcode_project: Bond.xcodeproj
+xcode_scheme: Bond
 
+before_install:
+  - sudo easy_install cpp-coveralls
+
+script:
+  - xctool test -project Bond.xcodeproj -scheme Bond -sdk iphonesimulator
+  - xctool test -project Bond.xcodeproj -scheme BondOSX -sdk macosx test
+
+after_success:
+  - ./coveralls.rb --exclude-folder BondTests --exclude-folder iOSAppForTesting --exclude-folder iOSAppForTestingTests
