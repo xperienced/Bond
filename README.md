@@ -1,5 +1,6 @@
 # Bond, Swift Bond
 
+[![CI Status](https://travis-ci.org/SwiftBond/Bond.svg?branch=master)](https://travis-ci.org/SwiftBond/Bond)
 
 Bond is a Swift binding framework that takes binding concept to a whole new level - boils it down to just one operator. It's simple, powerful, type-safe and multi-paradigm - just like Swift. 
 
@@ -70,7 +71,7 @@ viewModel.username <->> usernameTextField.dynText
 
 Notice the asymmetry of bi-directional bind operator. It's important which side of the expression something is on. In Bond, right side always retains left side! In this example, binding will exist as long as `usernameTextField` lives.
 
-Not impressed? Let me give you one last example. Say you have an array of repositories you would like to display in a table view. For each repository you have a name and its owner's profile photo. Of course, photo is not immediately available as it has to be downloaded, but once you get it, you want it to appear in table view's cell. Additionly, when user does 'pull down to refresh', and your array gets new repositiories, you want those in table view too. 
+Not impressed? Let me give you one last example. Say you have an array of repositories you would like to display in a table view. For each repository you have a name and its owner's profile photo. Of course, photo is not immediately available as it has to be downloaded, but once you get it, you want it to appear in table view's cell. Additionally, when user does 'pull down to refresh', and your array gets new repositiories, you want those in table view too. 
 
 So how do you proceed? Well, instead of implementing a data source object, observing photo downloads with KVO and manually updating table view with new items, with Bond you can do all that in just few lines:
 
@@ -229,7 +230,7 @@ Following table lists all available Dynamics of UIKit objects:
 |----------------|---------------------------------------------------------|-----------------|
 | UIView         | dynAlpha <br> dynHidden <br> dynBackgroundColor         | --              |
 | UISlider       | dynValue                                                | dynValue        |
-| UILabel        | dynText <br> dynAttributedText                          | dynText         |
+| UILabel        | dynText <br> dynAttributedText <br> dynTextColor        | dynText         |
 | UIProgressView | dynProgress                                             | dynProgress     |
 | UIImageView    | dynImage                                                | dynImage        |
 | UIButton       | dynEnabled <br> dynTitle <br> dynImageForNormalState    | dynEnabled      |
@@ -239,6 +240,7 @@ Following table lists all available Dynamics of UIKit objects:
 | UITextView     | dynText <br> dynAttributedText                          | dynText         |
 | UIDatePicker   | dynDate                                                 | dynDate         |
 | UIActivityIndicatorView | dynIsAnimating                                 | dynIsAnimating  |
+| DynamicArray<T> | dynCount                                               | dynCount        |
 
 You might be wondering what _Designated Dynamic_ is. It's way to access most commonly used Dynamic through property `designatedDynamic`. Having common name enables us to define protocol like 
 
